@@ -1,0 +1,6 @@
+@Tech_Trader_Server_HostAddress = http://localhost:5096
+
+GET {{Tech_Trader_Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
