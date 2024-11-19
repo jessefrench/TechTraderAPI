@@ -1,8 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
-using TechTrader.Models;
-using TechTrader.Data;
+using TechTrader.Endpoints;
+using TechTrader.Interfaces;
+using TechTrader.Services;
+using TechTrader.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,25 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
+
+builder.Services.AddScoped<IListingService, ListingService>();
+builder.Services.AddScoped<IListingRepository, ListingRepository>();
+
 var app = builder.Build();
+
+// Use CORS
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -33,5 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Endpoints
+ListingEndpoints.Map(app);
 
 app.Run();
