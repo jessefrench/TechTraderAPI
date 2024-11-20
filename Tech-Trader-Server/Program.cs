@@ -38,6 +38,8 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 
@@ -55,5 +57,6 @@ app.UseHttpsRedirection();
 
 // Endpoints
 ListingEndpoints.Map(app);
+CategoryEndpoints.Map(app);
 
 app.Run();

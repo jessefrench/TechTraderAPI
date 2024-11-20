@@ -22,7 +22,7 @@ namespace TechTrader.Endpoints
             .Produces<List<Listing>>(StatusCodes.Status200OK);
 
             // get a single listing by id
-            app.MapGet("/listings{listingId}", async (IListingService listingService, int listingId) =>
+            app.MapGet("/listings/{listingId}", async (IListingService listingService, int listingId) =>
             {
                 Listing selectedListing = await listingService.GetListingByIdAsync(listingId);
                 return Results.Ok(selectedListing);
