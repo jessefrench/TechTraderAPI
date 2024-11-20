@@ -45,6 +45,8 @@ builder.Services.AddScoped<IConditionService, ConditionService>();
 builder.Services.AddScoped<IConditionRepository, ConditionRepository>();
 builder.Services.AddScoped<IPaymentTypeService, PaymentTypeService>();
 builder.Services.AddScoped<IPaymentTypeRepository, PaymentTypeRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 var app = builder.Build();
 
@@ -65,5 +67,6 @@ ListingEndpoints.Map(app);
 CategoryEndpoints.Map(app);
 ConditionEndpoints.Map(app);
 PaymentTypeEndpoints.Map(app);
+MessageEndpoints.Map(app);
 
 app.Run();
