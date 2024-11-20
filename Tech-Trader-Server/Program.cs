@@ -47,6 +47,8 @@ builder.Services.AddScoped<IPaymentTypeService, PaymentTypeService>();
 builder.Services.AddScoped<IPaymentTypeRepository, PaymentTypeRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<ISavedListingService, SavedListingService>();
+builder.Services.AddScoped<ISavedListingRepository, SavedListingRepository>();
 
 var app = builder.Build();
 
@@ -68,5 +70,6 @@ CategoryEndpoints.Map(app);
 ConditionEndpoints.Map(app);
 PaymentTypeEndpoints.Map(app);
 MessageEndpoints.Map(app);
+SavedListingEndpoints.Map(app);
 
 app.Run();
