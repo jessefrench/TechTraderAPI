@@ -7,7 +7,7 @@ using TechTrader.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,19 +36,22 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add scoped services
 builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IConditionService, ConditionService>();
 builder.Services.AddScoped<IConditionRepository, ConditionRepository>();
+builder.Services.AddScoped<IPaymentTypeService, PaymentTypeService>();
+builder.Services.AddScoped<IPaymentTypeRepository, PaymentTypeRepository>();
 
 var app = builder.Build();
 
 // Use CORS
 app.UseCors();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -61,5 +64,6 @@ app.UseHttpsRedirection();
 ListingEndpoints.Map(app);
 CategoryEndpoints.Map(app);
 ConditionEndpoints.Map(app);
+PaymentTypeEndpoints.Map(app);
 
 app.Run();
