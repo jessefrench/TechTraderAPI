@@ -40,6 +40,8 @@ builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IListingRepository, ListingRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IConditionService, ConditionService>();
+builder.Services.AddScoped<IConditionRepository, ConditionRepository>();
 
 var app = builder.Build();
 
@@ -58,5 +60,6 @@ app.UseHttpsRedirection();
 // Endpoints
 ListingEndpoints.Map(app);
 CategoryEndpoints.Map(app);
+ConditionEndpoints.Map(app);
 
 app.Run();
