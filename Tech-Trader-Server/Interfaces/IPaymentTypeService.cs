@@ -5,9 +5,7 @@ namespace TechTrader.Interfaces
     public interface IPaymentTypeService
     {
         Task<List<PaymentType>> GetPaymentTypesAsync();
-        Task<PaymentType> GetPaymentTypeByIdAsync(int paymentTypeId);
-        Task<PaymentType> CreatePaymentTypeAsync(PaymentType PaymentType);
-        Task<PaymentType> UpdatePaymentTypeAsync(int paymentTypeId, PaymentType PaymentType);
-        Task<PaymentType> DeletePaymentTypeAsync(int paymentTypeId);
+        Task<IResult> AddPaymentTypeToUserAsync(int paymentTypeId, int userId);
+        Task<IResult> RemovePaymentTypeFromUserAsync(int paymentTypeId, int userId);
     }
 }

@@ -12,6 +12,7 @@
         public string ImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
         public bool Sold { get; set; }
+        public User Seller { get; set; }
         public Category Category { get; set; }
         public Condition Condition { get; set; }
     }

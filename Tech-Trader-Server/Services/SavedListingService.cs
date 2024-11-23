@@ -12,29 +12,19 @@ namespace TechTrader.Services
             _savedListingRepository = savedListingRepository;
         }
 
-        public async Task<List<SavedListing>> GetSavedListingsAsync()
+        public async Task<List<SavedListing>> GetSavedListingsByUserIdAsync(int userId)
         {
-            return await _savedListingRepository.GetSavedListingsAsync();
+            return await _savedListingRepository.GetSavedListingsByUserIdAsync(userId);
         }
 
-        public async Task<SavedListing> GetSavedListingByIdAsync(int savedListingId)
+        public async Task<IResult> AddSavedListingAsync(int listingId, int userId)
         {
-            return await _savedListingRepository.GetSavedListingByIdAsync(savedListingId);
+            return await _savedListingRepository.AddSavedListingAsync(listingId, userId);
         }
 
-        public async Task<SavedListing> CreateSavedListingAsync(SavedListing savedListing)
+        public async Task<IResult> RemoveSavedListingAsync(int listingId, int userId)
         {
-            return await _savedListingRepository.CreateSavedListingAsync(savedListing);
-        }
-
-        public async Task<SavedListing> UpdateSavedListingAsync(int savedListingId, SavedListing savedListing)
-        {
-            return await _savedListingRepository.UpdateSavedListingAsync(savedListingId, savedListing);
-        }
-
-        public async Task<SavedListing> DeleteSavedListingAsync(int savedListingId)
-        {
-            return await _savedListingRepository.DeleteSavedListingAsync(savedListingId);
+            return await _savedListingRepository.RemoveSavedListingAsync(listingId, userId);
         }
     }
 }

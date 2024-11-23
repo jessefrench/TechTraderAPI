@@ -19,50 +19,56 @@ namespace TechTrader.Repositories
             return await dbContext.PaymentTypes.ToListAsync();
         }
 
-        // get a single payment type by id
-        public async Task<PaymentType> GetPaymentTypeByIdAsync(int paymentTypeId)
+        // add a payment type to a user
+        public async Task<IResult> AddPaymentTypeToUserAsync(int paymentTypeId, int userId)
         {
-            PaymentType selectedPaymentType = await dbContext.PaymentTypes.FirstOrDefaultAsync(paymentType => paymentType.Id == paymentTypeId);
-            return selectedPaymentType;
-        }
+            var paymentType = await dbContext.PaymentTypes
+                .Include(paymentType => paymentType.Users)
+                .FirstOrDefaultAsync(paymentType => paymentType.Id == paymentTypeId);
 
-        // create a payment type
-        public async Task<PaymentType> CreatePaymentTypeAsync(PaymentType paymentType)
-        {
-            await dbContext.PaymentTypes.AddAsync(paymentType);
-            await dbContext.SaveChangesAsync();
-            return paymentType;
-        }
+            var user = await dbContext.Users
+                .Include(user => user.PaymentTypes)
+                .FirstOrDefaultAsync(user => user.Id == userId);
 
-        // update a payment type
-        public async Task<PaymentType> UpdatePaymentTypeAsync(int paymentTypeId, PaymentType updatedPaymentType)
-        {
-            var paymentTypeToUpdate = await dbContext.PaymentTypes.FirstOrDefaultAsync(paymentType => paymentType.Id == paymentTypeId);
-
-            if (paymentTypeToUpdate == null)
+            if (user == null || paymentType == null)
             {
-                return null;
+                return Results.NotFound("User or payment type not found.");
             }
 
-            paymentTypeToUpdate.Name = updatedPaymentType.Name;
-
-            await dbContext.SaveChangesAsync();
-            return updatedPaymentType;
-        }
-
-        // delete a payment type
-        public async Task<PaymentType> DeletePaymentTypeAsync(int paymentTypeId)
-        {
-            var paymentTypeToDelete = await dbContext.PaymentTypes.FirstOrDefaultAsync(paymentType => paymentType.Id == paymentTypeId);
-
-            if (paymentTypeToDelete == null)
+            if (user.PaymentTypes.Any(paymentType => paymentType.Id == paymentTypeId))
             {
-                return null;
+                return Results.BadRequest("User already has this payment type.");
             }
 
-            dbContext.PaymentTypes.Remove(paymentTypeToDelete);
+            user.PaymentTypes.Add(paymentType);
             await dbContext.SaveChangesAsync();
-            return paymentTypeToDelete;
+            return Results.Created($"/payment-types/{paymentTypeId}/add/{userId}", user);
+        }
+
+        // remove a payment type from a user
+        public async Task<IResult> RemovePaymentTypeFromUserAsync(int paymentTypeId, int userId)
+        {
+            var paymentType = await dbContext.PaymentTypes
+                .Include(paymentType => paymentType.Users)
+                .FirstOrDefaultAsync(paymentType => paymentType.Id == paymentTypeId);
+
+            var user = await dbContext.Users
+                .Include(user => user.PaymentTypes)
+                .FirstOrDefaultAsync(user => user.Id == userId);
+
+            if (user == null || paymentType == null)
+            {
+                return Results.NotFound("User or payment type not found.");
+            }
+
+            if (!user.PaymentTypes.Any(paymentType => paymentType.Id == paymentTypeId))
+            {
+                return Results.BadRequest("User does not have this payment type.");
+            }
+
+            user.PaymentTypes.Remove(paymentType);
+            await dbContext.SaveChangesAsync();
+            return Results.NoContent();
         }
     }
 }

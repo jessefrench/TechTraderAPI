@@ -17,24 +17,14 @@ namespace TechTrader.Services
             return await _paymentTypeRepository.GetPaymentTypesAsync();
         }
 
-        public async Task<PaymentType> GetPaymentTypeByIdAsync(int paymentTypeId)
+        public async Task<IResult> AddPaymentTypeToUserAsync(int paymentTypeId, int userId)
         {
-            return await _paymentTypeRepository.GetPaymentTypeByIdAsync(paymentTypeId);
+            return await _paymentTypeRepository.AddPaymentTypeToUserAsync(paymentTypeId, userId);
         }
 
-        public async Task<PaymentType> CreatePaymentTypeAsync(PaymentType paymentType)
+        public async Task<IResult> RemovePaymentTypeFromUserAsync(int paymentTypeId, int userId)
         {
-            return await _paymentTypeRepository.CreatePaymentTypeAsync(paymentType);
-        }
-
-        public async Task<PaymentType> UpdatePaymentTypeAsync(int paymentTypeId, PaymentType paymentType)
-        {
-            return await _paymentTypeRepository.UpdatePaymentTypeAsync(paymentTypeId, paymentType);
-        }
-
-        public async Task<PaymentType> DeletePaymentTypeAsync(int paymentTypeId)
-        {
-            return await _paymentTypeRepository.DeletePaymentTypeAsync(paymentTypeId);
+            return await _paymentTypeRepository.RemovePaymentTypeFromUserAsync(paymentTypeId, userId);
         }
     }
 }

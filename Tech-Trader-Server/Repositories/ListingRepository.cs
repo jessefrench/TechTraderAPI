@@ -16,13 +16,22 @@ namespace TechTrader.Repositories
         // get all listings
         public async Task<List<Listing>> GetListingsAsync()
         {
-            return await dbContext.Listings.ToListAsync();
+            return await dbContext.Listings
+                .Include(listing => listing.Seller)
+                .Include(listing => listing.Category)
+                .Include(listing => listing.Condition)
+                .ToListAsync();
         }
 
         // get listings by seller id
         public async Task<List<Listing>> GetListingsBySellerIdAsync(int sellerId)
         {
-            List<Listing> userListings = await dbContext.Listings.Where(listing => listing.SellerId == sellerId).ToListAsync();
+            List<Listing> userListings = await dbContext.Listings
+                .Include(listing => listing.Seller)
+                .Include(listing => listing.Category)
+                .Include(listing => listing.Condition)
+                .Where(listing => listing.SellerId == sellerId).ToListAsync();
+
             return userListings;
         }
 
@@ -30,6 +39,7 @@ namespace TechTrader.Repositories
         public async Task<Listing> GetListingByIdAsync(int listingId)
         {
             Listing selectedListing = await dbContext.Listings
+                .Include(listing => listing.Seller)
                 .Include(listing => listing.Category)
                 .Include(listing => listing.Condition)
                 .FirstOrDefaultAsync(listing =>  listing.Id == listingId);

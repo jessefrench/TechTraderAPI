@@ -19,19 +19,28 @@ namespace TechTrader.Repositories
             return await dbContext.Categories.ToListAsync();
         }
 
-        // get a single category by id
-        public async Task<Category> GetCategoryByIdAsync(int categoryId)
-        {
-            Category selectedCategory = await dbContext.Categories.FirstOrDefaultAsync(category => category.Id == categoryId);
-            return selectedCategory;
-        }
-
         // create a category
         public async Task<Category> CreateCategoryAsync(Category category)
         {
             await dbContext.Categories.AddAsync(category);
             await dbContext.SaveChangesAsync();
             return category;
+        }
+
+        // update a category
+        public async Task<Category> UpdateCategoryAsync(int categoryId, Category updatedCategory)
+        {
+            var categoryToUpdate = await dbContext.Categories.FirstOrDefaultAsync(category => category.Id == categoryId);
+
+            if (categoryToUpdate == null)
+            {
+                return null;
+            }
+
+            categoryToUpdate.Name = updatedCategory.Name;
+
+            await dbContext.SaveChangesAsync();
+            return updatedCategory;
         }
     }
 }
