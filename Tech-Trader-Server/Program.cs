@@ -49,6 +49,8 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<ISavedListingService, SavedListingService>();
 builder.Services.AddScoped<ISavedListingRepository, SavedListingRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
@@ -71,5 +73,6 @@ ConditionEndpoints.Map(app);
 PaymentTypeEndpoints.Map(app);
 MessageEndpoints.Map(app);
 SavedListingEndpoints.Map(app);
+UserEndpoints.Map(app);
 
 app.Run();
