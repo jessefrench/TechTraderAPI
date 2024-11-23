@@ -16,7 +16,11 @@ namespace TechTrader.Repositories
         // get a single user by id
         public async Task<User> GetUserByIdAsync(int userId)
         {
-            User selectedUser = await dbContext.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            User selectedUser = await dbContext.Users
+                .Include(user => user.PaymentTypes)
+                .Include(user => user.SavedListings)
+                .FirstOrDefaultAsync(user => user.Id == userId);
+
             return selectedUser;
         }
 

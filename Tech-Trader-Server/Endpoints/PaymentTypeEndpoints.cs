@@ -14,39 +14,21 @@ namespace TechTrader.Endpoints
             })
             .Produces<List<PaymentType>>(StatusCodes.Status200OK);
 
-            // get a single payment type by id
-            app.MapGet("/payment-types/{paymentTypeId}", async (IPaymentTypeService paymentTypeService, int paymentTypeId) =>
+            // add a payment type to a user
+            app.MapPost("/payment-types/{paymentTypeId}/add/{userId}", async (IPaymentTypeService paymentTypeService, int paymentTypeId, int userId) =>
             {
-                PaymentType selectedPaymentType = await paymentTypeService.GetPaymentTypeByIdAsync(paymentTypeId);
-                return Results.Ok(selectedPaymentType);
+                var result = await paymentTypeService.AddPaymentTypeToUserAsync(paymentTypeId, userId);
+                return result;
             })
-            .Produces<PaymentType>(StatusCodes.Status200OK);
+            .Produces<IResult>(StatusCodes.Status204NoContent);
 
-            // create a new payment type
-            app.MapPost("/payment-types", async (IPaymentTypeService paymentTypeService, PaymentType paymentType) =>
+            // remove a payment type from a user
+            app.MapDelete("/payment-types/{paymentTypeId}/remove/{userId}", async (IPaymentTypeService paymentTypeService, int paymentTypeId, int userId) =>
             {
-                var newPaymentType = await paymentTypeService.CreatePaymentTypeAsync(paymentType);
-                return Results.Created($"/payment-types/{paymentType.Id}", paymentType);
+                var result = await paymentTypeService.RemovePaymentTypeFromUserAsync(paymentTypeId, userId);
+                return result;
             })
-            .Produces<PaymentType>(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest);
-
-            // update a payment-type
-            app.MapPut("/payment-types/{paymentTypeId}", async (IPaymentTypeService paymentTypeService, int paymentTypeId, PaymentType updatedPaymentType) =>
-            {
-                var paymentTypeToUpdate = await paymentTypeService.UpdatePaymentTypeAsync(paymentTypeId, updatedPaymentType);
-                return Results.Ok(paymentTypeToUpdate);
-            })
-            .Produces<PaymentType>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status204NoContent);
-
-            // delete a payment type
-            app.MapDelete("/payment-types/{paymentTypeId}", async (IPaymentTypeService paymentTypeService, int paymentTypeId) =>
-            {
-                var paymentTypeToDelete = await paymentTypeService.DeletePaymentTypeAsync(paymentTypeId);
-                return Results.NoContent();
-            })
-            .Produces<PaymentType>(StatusCodes.Status204NoContent);
+            .Produces<IResult>(StatusCodes.Status204NoContent);
         }
     }
 }

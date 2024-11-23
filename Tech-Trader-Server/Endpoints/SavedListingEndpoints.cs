@@ -7,46 +7,28 @@ namespace TechTrader.Endpoints
     {
         public static void Map(WebApplication app)
         {
-            // get all saved listings
-            app.MapGet("/saved-listings", async (ISavedListingService savedListingService) =>
+            // get saved listings by user id
+            app.MapGet("/saved-listings/{userId}", async (ISavedListingService savedListingService, int userId) =>
             {
-                return await savedListingService.GetSavedListingsAsync();
+                return await savedListingService.GetSavedListingsByUserIdAsync(userId);
             })
             .Produces<List<SavedListing>>(StatusCodes.Status200OK);
 
-            // get a single saved listing by id
-            app.MapGet("/saved-listings/{savedListingId}", async (ISavedListingService savedListingService, int savedListingId) =>
+            // add a saved listing for a user
+            app.MapPost("/saved-listings/{listingId}/add/{userId}", async (ISavedListingService savedListingService, int listingId, int userId) =>
             {
-                SavedListing selectedSavedListing = await savedListingService.GetSavedListingByIdAsync(savedListingId);
-                return Results.Ok(selectedSavedListing);
+                var result = await savedListingService.AddSavedListingAsync(listingId, userId);
+                return result;
             })
-            .Produces<SavedListing>(StatusCodes.Status200OK);
+            .Produces<IResult>(StatusCodes.Status204NoContent);
 
-            // create a new saved listing
-            app.MapPost("/saved-listings", async (ISavedListingService savedListingService, SavedListing savedListing) =>
+            // remove a saved listing from a user
+            app.MapDelete("/saved-listings/{listingId}/remove/{userId}", async (ISavedListingService savedListingService, int listingId, int userId) =>
             {
-                var newSavedListing = await savedListingService.CreateSavedListingAsync(savedListing);
-                return Results.Created($"/savedListings/{savedListing.Id}", savedListing);
+                var result = await savedListingService.RemoveSavedListingAsync(listingId, userId);
+                return result;
             })
-            .Produces<SavedListing>(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest);
-
-            // update a saved listing
-            app.MapPut("/saved-listings/{savedListingId}", async (ISavedListingService savedListingService, int savedListingId, SavedListing updatedSavedListing) =>
-            {
-                var savedListingToUpdate = await savedListingService.UpdateSavedListingAsync(savedListingId, updatedSavedListing);
-                return Results.Ok(savedListingToUpdate);
-            })
-            .Produces<SavedListing>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status204NoContent);
-
-            // delete a saved listing
-            app.MapDelete("/saved-listings/{savedListingId}", async (ISavedListingService savedListingService, int savedListingId) =>
-            {
-                var savedListingToDelete = await savedListingService.DeleteSavedListingAsync(savedListingId);
-                return Results.NoContent();
-            })
-            .Produces<SavedListing>(StatusCodes.Status204NoContent);
+            .Produces<IResult>(StatusCodes.Status204NoContent);
         }
     }
 }

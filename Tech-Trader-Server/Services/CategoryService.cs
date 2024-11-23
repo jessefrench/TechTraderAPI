@@ -17,14 +17,14 @@ namespace TechTrader.Services
             return await _categoryRepository.GetCategoriesAsync();
         }
 
-        public async Task<Category> GetCategoryByIdAsync(int categoryId)
-        {
-            return await _categoryRepository.GetCategoryByIdAsync(categoryId);
-        }
-
         public async Task<Category> CreateCategoryAsync(Category category)
         {
             return await _categoryRepository.CreateCategoryAsync(category);
+        }
+
+        public async Task<Category> UpdateCategoryAsync(int categoryId, Category updatedCategory)
+        {
+            return await _categoryRepository.UpdateCategoryAsync(categoryId, updatedCategory);
         }
     }
 }

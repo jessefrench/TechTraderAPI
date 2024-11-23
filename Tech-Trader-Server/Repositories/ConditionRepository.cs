@@ -18,12 +18,5 @@ namespace TechTrader.Repositories
         {
             return await dbContext.Conditions.ToListAsync();
         }
-
-        // get a single condition by id
-        public async Task<Condition> GetConditionByIdAsync(int conditionId)
-        {
-            Condition selectedCondition = await dbContext.Conditions.FirstOrDefaultAsync(condition => condition.Id == conditionId);
-            return selectedCondition;
-        }
     }
 }

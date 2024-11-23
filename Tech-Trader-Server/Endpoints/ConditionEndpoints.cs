@@ -13,14 +13,6 @@ namespace TechTrader.Endpoints
                 return await conditionService.GetConditionsAsync();
             })
             .Produces<List<Condition>>(StatusCodes.Status200OK);
-
-            // get a single condition by id
-            app.MapGet("/conditions/{conditionId}", async (IConditionService conditionService, int conditionId) =>
-            {
-                Condition selectedCondition = await conditionService.GetConditionByIdAsync(conditionId);
-                return Results.Ok(selectedCondition);
-            })
-            .Produces<Condition>(StatusCodes.Status200OK);
         }
     }
 }

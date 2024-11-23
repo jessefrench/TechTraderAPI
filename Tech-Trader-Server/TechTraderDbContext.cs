@@ -22,5 +22,9 @@ public class TechTraderDbContext : DbContext
         modelBuilder.Entity<PaymentType>().HasData(PaymentTypeData.PaymentTypes);
         modelBuilder.Entity<SavedListing>().HasData(SavedListingData.SavedListings);
         modelBuilder.Entity<User>().HasData(UserData.Users);
+
+        modelBuilder.Entity<PaymentType>()
+            .HasMany(paymentType => paymentType.Users)
+            .WithMany(user => user.PaymentTypes);
     }
 }

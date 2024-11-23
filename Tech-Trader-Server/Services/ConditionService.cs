@@ -16,10 +16,5 @@ namespace TechTrader.Services
         {
             return await _conditionRepository.GetConditionsAsync();
         }
-
-        public async Task<Condition> GetConditionByIdAsync(int conditionId)
-        {
-            return await _conditionRepository.GetConditionByIdAsync(conditionId);
-        }
     }
 }

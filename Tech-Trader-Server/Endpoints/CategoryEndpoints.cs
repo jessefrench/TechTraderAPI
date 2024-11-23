@@ -14,14 +14,6 @@ namespace TechTrader.Endpoints
             })
             .Produces<List<Category>>(StatusCodes.Status200OK);
 
-            // get a single category by id
-            app.MapGet("/categories/{categoryId}", async (ICategoryService categoryService, int categoryId) =>
-            {
-                Category selectedCategory = await categoryService.GetCategoryByIdAsync(categoryId);
-                return Results.Ok(selectedCategory);
-            })
-            .Produces<Category>(StatusCodes.Status200OK);
-
             // create a new category
             app.MapPost("/categories", async (ICategoryService categoryService, Category category) =>
             {
@@ -30,6 +22,15 @@ namespace TechTrader.Endpoints
             })
             .Produces<Category>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest);
+
+            // update a category
+            app.MapPut("/categories/{categoryId}", async (ICategoryService categoryService, int categoryId, Category updatedCategory) =>
+            {
+                var categoryToUpdate = await categoryService.UpdateCategoryAsync(categoryId, updatedCategory);
+                return Results.Ok(categoryToUpdate);
+            })
+            .Produces<Category>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent);
         }
     }
 }

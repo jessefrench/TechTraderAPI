@@ -12,5 +12,7 @@
         public string State { get; set; }
         public string Zip {  get; set; }
         public bool IsSeller { get; set; }
+        public List<PaymentType> PaymentTypes { get; set; }
+        public List<SavedListing> SavedListings { get; set; }
     }
 }
