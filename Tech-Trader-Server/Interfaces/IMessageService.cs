@@ -4,10 +4,12 @@ namespace TechTrader.Interfaces
 {
     public interface IMessageService
     {
-        Task<List<Message>> GetMessagesAsync();
-        Task<Message> GetMessageByIdAsync(int messageId);
-        Task<Message> CreateMessageAsync(Message Message);
-        Task<Message> UpdateMessageAsync(int messageId, Message Message);
-        Task<Message> DeleteMessageAsync(int messageId);
+        Task<List<Message>> GetAllMessagesAsync(int userId);
+        Task<List<Message>> GetSingleMessageThreadAsync(int userId, int sellerId);
+        Task<List<Message>> GetLatestMessagesAsync(int userId);
+        Task<Message> CreateNewConversationAsync(Message message);
+        Task<Message> UpdateMessageAsync(int messageId, Message updatedMessage);
+        Task<bool> DeleteMessageAsync(int messageId);
+        Task<bool> DeleteConversationAsync(int userId, int sellerId);
     }
 }

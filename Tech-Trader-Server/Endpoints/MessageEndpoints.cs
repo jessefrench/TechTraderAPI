@@ -7,25 +7,31 @@ namespace TechTrader.Endpoints
     {
         public static void Map(WebApplication app)
         {
-            // get all messages
-            app.MapGet("/messages", async (IMessageService messageService) =>
+            // get all user messages
+            app.MapGet("/messages/{userId}", async (IMessageService messageService, int userId) =>
             {
-                return await messageService.GetMessagesAsync();
+                return await messageService.GetAllMessagesAsync(userId);
             })
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
-            // get a single message by id
-            app.MapGet("/messages/{messageId}", async (IMessageService messageService, int messageId) =>
+            // get a single message thread
+            app.MapGet("/messages/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
             {
-                Message selectedMessage = await messageService.GetMessageByIdAsync(messageId);
-                return Results.Ok(selectedMessage);
+                return await messageService.GetSingleMessageThreadAsync(userId, sellerId);
             })
-            .Produces<Message>(StatusCodes.Status200OK);
+            .Produces<List<Message>>(StatusCodes.Status200OK);
 
-            // create a new message
+            // get latest messages for each conversation
+            app.MapGet("/messages/latest/{userId}", async (IMessageService messageService, int userId) =>
+            {
+                return await messageService.GetLatestMessagesAsync(userId);
+            })
+            .Produces<List<Message>>(StatusCodes.Status200OK);
+
+            // create a new conversation
             app.MapPost("/messages", async (IMessageService messageService, Message message) =>
             {
-                var newMessage = await messageService.CreateMessageAsync(message);
+                var newMessage = await messageService.CreateNewConversationAsync(message);
                 return Results.Created($"/messages/{message.Id}", message);
             })
             .Produces<Message>(StatusCodes.Status201Created)
@@ -44,6 +50,14 @@ namespace TechTrader.Endpoints
             app.MapDelete("/messages/{messageId}", async (IMessageService messageService, int messageId) =>
             {
                 var messageToDelete = await messageService.DeleteMessageAsync(messageId);
+                return Results.NoContent();
+            })
+            .Produces<Message>(StatusCodes.Status204NoContent);
+
+            // delete a conversation
+            app.MapDelete("/messages/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
+            {
+                var conversationToDelete = await messageService.DeleteConversationAsync(userId, sellerId);
                 return Results.NoContent();
             })
             .Produces<Message>(StatusCodes.Status204NoContent);
