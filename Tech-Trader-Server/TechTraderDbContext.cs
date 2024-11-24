@@ -26,5 +26,17 @@ public class TechTraderDbContext : DbContext
         modelBuilder.Entity<PaymentType>()
             .HasMany(paymentType => paymentType.Users)
             .WithMany(user => user.PaymentTypes);
+
+        modelBuilder.Entity<Message>()
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(message => message.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Message>()
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(message => message.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
