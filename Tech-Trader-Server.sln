@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech-Trader-Server", "Tech-Trader-Server\Tech-Trader-Server.csproj", "{C6C92955-B10F-4309-A573-87752DF6CCE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechTrader.Tests", "Tech-Trader-Server.Tests\TechTrader.Tests.csproj", "{625CFC41-A89A-447D-8217-A79517D18915}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech-Trader-Server.Tests", "Tech-Trader-Server.Tests\Tech-Trader-Server.Tests.csproj", "{625CFC41-A89A-447D-8217-A79517D18915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
