@@ -120,6 +120,58 @@ namespace TechTrader.Tests
         }
 
         [Fact]
+        public async Task GetListingsBySellerIdAsync_ShouldReturnListOfListings_WhenSellerIdIsValid()
+        {
+            // Arrange
+            var sellerId = 1;
+            var listings = new List<Listing>
+            {
+                new Listing
+                {
+                    Id = 101,
+                    SellerId = sellerId,
+                    Name = "PC Case",
+                    Description = "A great PC case",
+                    Price = 99.99M,
+                    CreatedOn = DateTime.Now,
+                    Sold = false,
+                    Seller = new User { Id = sellerId, FirstName = "John", LastName = "Doe" },
+                    Category = new Category { Id = 1, Name = "PC Parts" },
+                    Condition = new Condition { Id = 1, Name = "New" }
+                },
+                new Listing
+                {
+                    Id = 102,
+                    SellerId = sellerId,
+                    Name = "Laptop",
+                    Description = "A used laptop",
+                    Price = 499.99M,
+                    CreatedOn = DateTime.Now,
+                    Sold = false,
+                    Seller = new User { Id = sellerId, FirstName = "John", LastName = "Doe" },
+                    Category = new Category { Id = 2, Name = "Laptops" },
+                    Condition = new Condition { Id = 2, Name = "Used" }
+                }
+            };
+
+            _mockListingRepository
+                .Setup(repo => repo.GetListingsBySellerIdAsync(sellerId))
+                .ReturnsAsync(listings);
+
+            // Act
+            var result = await _listingService.GetListingsBySellerIdAsync(sellerId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<List<Listing>>(result);
+            Assert.Equal(listings.Count, result.Count);
+            Assert.Equal(listings[0].Id, result[0].Id);
+            Assert.Equal(listings[1].Name, result[1].Name);
+
+            _mockListingRepository.Verify(repo => repo.GetListingsBySellerIdAsync(sellerId), Times.Once);
+        }
+
+        [Fact]
         public async Task CreateListingAsync_ShouldReturnCreatedListing()
         {
             // Arrange
