@@ -78,7 +78,7 @@ Launch the solution. Swagger should automatically launch and provide you with th
 
 <h2 id="postman-documentation">Postman Documentation</h2>
 
-Check out the [Tech Trader Postman Documentation](https://www.postman.com/jessefrench/tech-trader/documentation/jyjd2id/tech-trader-api?workspaceId=393023e8-f3e8-4bb0-b06a-5028a8c25f35) to learn more about the API routes and see examples of how each request and response should look.
+Check out the [Tech Trader Postman Documentation](https://documenter.getpostman.com/view/33562650/2sAYBViBzx) to learn more about the API routes and see examples of how each request and response should look.
 
 <h2 id="links">Additional Project Links</h2>
 
