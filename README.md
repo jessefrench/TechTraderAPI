@@ -83,4 +83,5 @@ Check out the [Tech Trader Postman Documentation](https://www.postman.com/jessef
 <h2 id="links">Additional Project Links</h2>
 
 - [ERD](https://dbdiagram.io/d/Tech-Trader-6733af0ae9daa85aca375e54)
+- [Project Board](https://github.com/users/jessefrench/projects/6/views/1)
 - [Frontend Wireframe](https://www.figma.com/design/dnXNNcrtKGU1yyD63IfcTv/Tech-Trader-Wireframe?node-id=0-1&t=Qne7gCatYCAMntuQ-1)
