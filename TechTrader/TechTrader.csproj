@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Tech_Trader_Server</RootNamespace>
+    <RootNamespace>TechTrader</RootNamespace>
     <UserSecretsId>4dc4e824-aa7d-4f59-849c-117482b6cd8d</UserSecretsId>
   </PropertyGroup>
 
