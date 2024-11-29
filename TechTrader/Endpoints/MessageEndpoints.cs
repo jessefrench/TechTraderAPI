@@ -3,63 +3,79 @@ using TechTrader.Interfaces;
 
 namespace TechTrader.Endpoints
 {
-    public class MessageEndpoints
+    public static class MessageEndpoints
     {
-        public static void Map(WebApplication app)
+        public static void MapMessageEndpoints(this IEndpointRouteBuilder routes)
         {
+            var group = routes.MapGroup("/messages").WithTags(nameof(Message));
+
             // get all user messages
-            app.MapGet("/messages/{userId}", async (IMessageService messageService, int userId) =>
+            group.MapGet("/{userId}", async (IMessageService messageService, int userId) =>
             {
                 return await messageService.GetAllMessagesAsync(userId);
             })
+            .WithName("GetAllMessages")
+            .WithOpenApi()
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
             // get a single message thread
-            app.MapGet("/messages/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
+            group.MapGet("/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
             {
                 return await messageService.GetSingleMessageThreadAsync(userId, sellerId);
             })
+            .WithName("GetSingleMessageThread")
+            .WithOpenApi()
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
             // get latest messages for each conversation
-            app.MapGet("/messages/latest/{userId}", async (IMessageService messageService, int userId) =>
+            group.MapGet("/latest/{userId}", async (IMessageService messageService, int userId) =>
             {
                 return await messageService.GetLatestMessagesAsync(userId);
             })
+            .WithName("GetLatestMessages")
+            .WithOpenApi()
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
             // create a new conversation
-            app.MapPost("/messages", async (IMessageService messageService, Message message) =>
+            group.MapPost("/", async (IMessageService messageService, Message message) =>
             {
                 var newMessage = await messageService.CreateNewConversationAsync(message);
                 return Results.Created($"/messages/{message.Id}", message);
             })
+            .WithName("CreateNewConversation")
+            .WithOpenApi()
             .Produces<Message>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest);
 
             // update a message
-            app.MapPut("/messages/{messageId}", async (IMessageService messageService, int messageId, Message updatedMessage) =>
+            group.MapPut("/{messageId}", async (IMessageService messageService, int messageId, Message updatedMessage) =>
             {
                 var messageToUpdate = await messageService.UpdateMessageAsync(messageId, updatedMessage);
                 return Results.Ok(messageToUpdate);
             })
+            .WithName("UpdateMessage")
+            .WithOpenApi()
             .Produces<Message>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
 
             // delete a message
-            app.MapDelete("/messages/{messageId}", async (IMessageService messageService, int messageId) =>
+            group.MapDelete("/{messageId}", async (IMessageService messageService, int messageId) =>
             {
                 var messageToDelete = await messageService.DeleteMessageAsync(messageId);
                 return Results.NoContent();
             })
+            .WithName("DeleteMessage")
+            .WithOpenApi()
             .Produces<Message>(StatusCodes.Status204NoContent);
 
             // delete a conversation
-            app.MapDelete("/messages/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
+            group.MapDelete("/{userId}/sellers/{sellerId}", async (IMessageService messageService, int userId, int sellerId) =>
             {
                 var conversationToDelete = await messageService.DeleteConversationAsync(userId, sellerId);
                 return Results.NoContent();
             })
+            .WithName("DeleteConversation")
+            .WithOpenApi()
             .Produces<Message>(StatusCodes.Status204NoContent);
         }
     }

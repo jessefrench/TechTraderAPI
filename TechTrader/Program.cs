@@ -68,12 +68,11 @@ app.UseHttpsRedirection();
 
 // Endpoints
 app.MapCategoryEndpoints();
-
-ListingEndpoints.Map(app);
-ConditionEndpoints.Map(app);
-PaymentTypeEndpoints.Map(app);
-MessageEndpoints.Map(app);
-SavedListingEndpoints.Map(app);
-UserEndpoints.Map(app);
+app.MapConditionEndpoints();
+app.MapListingEndpoints();
+app.MapMessageEndpoints();
+app.MapPaymentTypeEndpoints();
+app.MapSavedListingEndpoints();
+app.MapUserEndpoints();
 
 app.Run();
