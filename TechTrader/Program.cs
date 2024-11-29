@@ -67,12 +67,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // Endpoints
-ListingEndpoints.Map(app);
-CategoryEndpoints.Map(app);
-ConditionEndpoints.Map(app);
-PaymentTypeEndpoints.Map(app);
-MessageEndpoints.Map(app);
-SavedListingEndpoints.Map(app);
-UserEndpoints.Map(app);
+app.MapCategoryEndpoints();
+app.MapConditionEndpoints();
+app.MapListingEndpoints();
+app.MapMessageEndpoints();
+app.MapPaymentTypeEndpoints();
+app.MapSavedListingEndpoints();
+app.MapUserEndpoints();
 
 app.Run();

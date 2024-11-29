@@ -3,15 +3,19 @@ using TechTrader.Interfaces;
 
 namespace TechTrader.Endpoints
 {
-    public class ConditionEndpoints
+    public static class ConditionEndpoints
     {
-        public static void Map(WebApplication app)
+        public static void MapConditionEndpoints(this IEndpointRouteBuilder routes)
         {
+            var group = routes.MapGroup("/conditions").WithTags(nameof(Condition));
+
             // get all conditions
-            app.MapGet("/conditions", async (IConditionService conditionService) =>
+            group.MapGet("/", async (IConditionService conditionService) =>
             {
                 return await conditionService.GetConditionsAsync();
             })
+            .WithName("GetConditions")
+            .WithOpenApi()
             .Produces<List<Condition>>(StatusCodes.Status200OK);
         }
     }
