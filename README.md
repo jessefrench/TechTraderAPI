@@ -1,4 +1,4 @@
-<h1 align="center" style="font-weight: bold;">Tech Trader API</h1>
+<h1 align="center" style="font-weight: bold;">TechTrader API</h1>
 
 <p align="center">
 <a href="#technologies">Technologies</a> |
@@ -7,7 +7,7 @@
 <a href="#links"> Additional Project Links</a>
 </p>
 
-<p align="center">This is the server-side repo for the full-stack app Tech Trader — a marketplace app for tech lovers.</p>
+<p align="center">This is the server-side repo for the full-stack app TechTrader — a marketplace app for tech lovers.</p>
 
 <h2 id="technologies">💻 Technologies</h2>
 
@@ -78,7 +78,7 @@ Launch the solution. Swagger should automatically launch and provide you with th
 
 <h2 id="postman-documentation">📄 Postman Docs</h2>
 
-Check out the [Tech Trader Postman Docs](https://documenter.getpostman.com/view/33562650/2sAYBViBzx) to learn about the API routes and see examples of how each request and response should look.
+Check out the [TechTrader Postman Docs](https://documenter.getpostman.com/view/33562650/2sAYBViBzx) to learn about the API routes and see examples of how each request and response should look.
 
 <h2 id="links">🔗 Additional Project Links</h2>
 
