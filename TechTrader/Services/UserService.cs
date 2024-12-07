@@ -12,9 +12,9 @@ namespace TechTrader.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User> GetUserByIdAsync(int userId)
+        public async Task<User?> CheckUserAsync(string uid)
         {
-            return await _userRepository.GetUserByIdAsync(userId);
+            return await _userRepository.CheckUserAsync(uid);
         }
 
         public async Task<User> CreateUserAsync(User user)
@@ -25,6 +25,11 @@ namespace TechTrader.Services
         public async Task<User> UpdateUserAsync(int userId, User user)
         {
             return await _userRepository.UpdateUserAsync(userId, user);
+        }
+
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            return await _userRepository.GetUserByIdAsync(userId);
         }
     }
 }
