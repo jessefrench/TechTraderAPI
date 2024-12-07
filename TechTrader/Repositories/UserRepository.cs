@@ -13,15 +13,10 @@ namespace TechTrader.Repositories
             dbContext = context;
         }
 
-        // get a single user by id
-        public async Task<User> GetUserByIdAsync(int userId)
+        // check user
+        public async Task<User?> CheckUserAsync(string uid)
         {
-            User selectedUser = await dbContext.Users
-                .Include(user => user.PaymentTypes)
-                .Include(user => user.SavedListings)
-                .FirstOrDefaultAsync(user => user.Id == userId);
-
-            return selectedUser;
+            return await dbContext.Users.FirstOrDefaultAsync(user => user.Uid == uid);
         }
 
         // create a user
@@ -53,6 +48,17 @@ namespace TechTrader.Repositories
 
             await dbContext.SaveChangesAsync();
             return updatedUser;
+        }
+
+        // get a single user by id
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            User selectedUser = await dbContext.Users
+                .Include(user => user.PaymentTypes)
+                .Include(user => user.SavedListings)
+                .FirstOrDefaultAsync(user => user.Id == userId);
+
+            return selectedUser;
         }
     }
 }

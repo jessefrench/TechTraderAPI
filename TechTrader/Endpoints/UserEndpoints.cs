@@ -9,18 +9,25 @@ namespace TechTrader.Endpoints
         {
             var group = routes.MapGroup("/users").WithTags(nameof(User));
 
-            // get a single user by id
-            group.MapGet("/{userId}", async (IUserService userService, int userId) =>
+            // check user
+            group.MapGet("/checkuser/{uid}", async (IUserService userService, string uid) =>
             {
-                User selectedUser = await userService.GetUserByIdAsync(userId);
-                return Results.Ok(selectedUser);
+                var user = await userService.CheckUserAsync(uid);
+
+                if (user == null)
+                {
+                    return Results.NotFound("User not found.");
+                }
+
+                return Results.Ok(user);
             })
-            .WithName("GetUserById")
+            .WithName("CheckUser")
             .WithOpenApi()
-            .Produces<User>(StatusCodes.Status200OK);
+            .Produces<User>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
 
             // create a new user
-            group.MapPost("/", async (IUserService userService, User user) =>
+            group.MapPost("/register", async (IUserService userService, User user) =>
             {
                 var newUser = await userService.CreateUserAsync(user);
                 return Results.Created($"/users/{user.Id}", user);
@@ -40,6 +47,16 @@ namespace TechTrader.Endpoints
             .WithOpenApi()
             .Produces<PaymentType>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
+            
+            // get a single user by id
+            group.MapGet("/{userId}", async (IUserService userService, int userId) =>
+            {
+                User selectedUser = await userService.GetUserByIdAsync(userId);
+                return Results.Ok(selectedUser);
+            })
+            .WithName("GetUserById")
+            .WithOpenApi()
+            .Produces<User>(StatusCodes.Status200OK);
         }
     }
 }
