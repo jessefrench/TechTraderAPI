@@ -27,6 +27,15 @@ namespace TechTrader.Endpoints
             .WithOpenApi()
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
+            // get all messages for a specific listing
+            group.MapGet("/{userId}/listings/{listingId}", async (IMessageService messageService, int userId, int listingId) =>
+            {
+                return await messageService.GetUserMessagesByListingIdAsync(userId, listingId);
+            })
+            .WithName("GetMessagesByListingId")
+            .WithOpenApi()
+            .Produces<List<Message>>(StatusCodes.Status200OK);
+
             // get latest messages for each conversation
             group.MapGet("/latest/{userId}", async (IMessageService messageService, int userId) =>
             {
