@@ -53,6 +53,7 @@ namespace TechTrader.Repositories
         public async Task<List<Message>> GetLatestMessagesAsync(int userId)
         {
             var conversations = await dbContext.Messages
+                .Include(message => message.Listing.Seller)
                 .Where(message => message.ReceiverId == userId || message.SenderId == userId)
                 .GroupBy(message => new
                 {
