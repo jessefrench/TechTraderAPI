@@ -22,6 +22,11 @@ namespace TechTrader.Services
             return await _messageRepository.GetSingleMessageThreadAsync(userId, sellerId);
         }
 
+        public async Task<List<Message>> GetUserMessagesByListingIdAsync(int userId, int listingId)
+        {
+            return await _messageRepository.GetUserMessagesByListingIdAsync(userId, listingId);
+        }
+
         public async Task<List<Message>> GetLatestMessagesAsync(int userId)
         {
             return await _messageRepository.GetLatestMessagesAsync(userId);

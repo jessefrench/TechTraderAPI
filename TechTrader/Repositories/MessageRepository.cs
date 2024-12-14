@@ -37,10 +37,23 @@ namespace TechTrader.Repositories
             return messageThread;
         }
 
+        // get all user messages for a specific listing
+        public async Task<List<Message>> GetUserMessagesByListingIdAsync(int userId, int listingId)
+        {
+            var listingMessages = await dbContext.Messages
+                .Where(message => (message.SenderId == userId && message.ListingId == listingId) ||
+                                  (message.ReceiverId == userId && message.ListingId == listingId))
+                .OrderBy(message => message.SentAt)
+                .ToListAsync();
+
+            return listingMessages;
+        }
+
         // get latest message for each conversation
         public async Task<List<Message>> GetLatestMessagesAsync(int userId)
         {
             var conversations = await dbContext.Messages
+                .Include(message => message.Listing.Seller)
                 .Where(message => message.ReceiverId == userId || message.SenderId == userId)
                 .GroupBy(message => new
                 {
