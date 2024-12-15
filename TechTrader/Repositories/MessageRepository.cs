@@ -58,7 +58,8 @@ namespace TechTrader.Repositories
                 .GroupBy(message => new
                 {
                     Sender = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId,
-                    Receiver = message.SenderId < message.ReceiverId ? message.ReceiverId : message.SenderId
+                    Receiver = message.SenderId < message.ReceiverId ? message.ReceiverId : message.SenderId,
+                    Listing = message.ListingId
                 })
                 .Select(group => group.OrderByDescending(message => message.SentAt).FirstOrDefault())
                 .ToListAsync();
