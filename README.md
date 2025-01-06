@@ -6,8 +6,14 @@
 <a href="#postman-documentation"> Postman Docs</a> |
 <a href="#links"> Additional Project Links</a>
 </p>
+<br>
 
-<p align="center">This is the server-side repo for the full-stack app TechTrader — a marketplace app for tech lovers.</p>
+<p align="center">
+This is the server-side repo for the full-stack app TechTrader — a tech marketplace app that enables users to browse, filter, and manage listings for sale, save favorites,
+and message other users.
+<br><br>
+<a href="https://github.com/jessefrench/TechTraderClient">➡️ Go to client-side repo</a>
+</p>
 
 <h2 id="technologies">💻 Technologies</h2>
 
