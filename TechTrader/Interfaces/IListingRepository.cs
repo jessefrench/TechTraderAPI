@@ -10,5 +10,6 @@ namespace TechTrader.Interfaces
         Task<Listing> CreateListingAsync(Listing Listing);
         Task<Listing> UpdateListingAsync(int listingId, Listing Listing);
         Task<Listing> DeleteListingAsync(int listingId);
+        Task<List<Listing>> SearchListingsAsync(string searchValue);
     }
 }

@@ -91,5 +91,30 @@ namespace TechTrader.Repositories
             await dbContext.SaveChangesAsync();
             return listingToDelete;
         }
+
+        // search listings
+        public async Task<List<Listing>> SearchListingsAsync(string searchValue)
+        {
+            if (string.IsNullOrEmpty(searchValue))
+            {
+                return new List<Listing>();
+            }
+
+            var searchLower = searchValue.ToLowerInvariant();
+
+            return await dbContext.Listings
+                .Include(listing => listing.Seller)
+                .Include(listing => listing.Category)
+                .Include(listing => listing.Condition)
+                .Where(listing =>
+                    listing.Name.ToLower().Contains(searchLower) ||
+                    listing.Description.ToLower().Contains(searchLower) ||
+                    (listing.Category != null && listing.Category.Name.ToLower().Contains(searchLower)) ||
+                    (listing.Condition != null && listing.Condition.Name.ToLower().Contains(searchLower)) ||
+                    listing.Seller.City.ToLower().Contains(searchLower) ||
+                    listing.Seller.FirstName.ToLower().Contains(searchLower) ||
+                    listing.Seller.LastName.ToLower().Contains(searchLower))
+                .ToListAsync();
+        }
     }
 }

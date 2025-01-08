@@ -41,5 +41,10 @@ namespace TechTrader.Services
         {
             return await _listingRepository.DeleteListingAsync(listingId);
         }
+
+        public async Task<List<Listing>> SearchListingsAsync(string searchValue)
+        {
+            return await _listingRepository.SearchListingsAsync(searchValue);
+        }
     }
 }
