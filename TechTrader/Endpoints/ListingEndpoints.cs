@@ -69,7 +69,7 @@ namespace TechTrader.Endpoints
             .WithOpenApi()
             .Produces<Listing>(StatusCodes.Status204NoContent);
 
-            group.MapGet("/search/{searchValue}", async (IListingService listingService, string searchValue) =>
+            group.MapGet("/search", async (IListingService listingService, string searchValue) =>
             {
                 return await listingService.SearchListingsAsync(searchValue);
             })
