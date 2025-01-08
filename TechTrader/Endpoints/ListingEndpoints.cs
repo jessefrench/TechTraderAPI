@@ -68,6 +68,14 @@ namespace TechTrader.Endpoints
             .WithName("DeleteListing")
             .WithOpenApi()
             .Produces<Listing>(StatusCodes.Status204NoContent);
+
+            group.MapGet("/search", async (IListingService listingService, string searchValue) =>
+            {
+                return await listingService.SearchListingsAsync(searchValue);
+            })
+            .WithName("SearchListings")
+            .WithOpenApi()
+            .Produces<List<Listing>>(StatusCodes.Status200OK);
         }
     }
 }
