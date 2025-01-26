@@ -19,12 +19,8 @@ builder.Services.AddHealthChecks();
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Retrieve the connection string
-var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
-builder.Services.AddDbContext<TechTraderDbContext>(options => options.UseNpgsql(connectionString));
-
 // Allows API endpoints to access the database through Entity Framework Core
-builder.Services.AddNpgsql<TechTraderDbContext>(connectionString);
+builder.Services.AddNpgsql<TechTraderDbContext>(builder.Configuration["TechTraderDbConnectionString"]);
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>
@@ -37,7 +33,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://techtraderclient-production.up.railway.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
@@ -61,15 +57,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
-
-// Endpoints
-app.MapCategoryEndpoints();
-app.MapConditionEndpoints();
-app.MapListingEndpoints();
-app.MapMessageEndpoints();
-app.MapPaymentTypeEndpoints();
-app.MapSavedListingEndpoints();
-app.MapUserEndpoints();
 
 // Use health checks
 app.UseHealthChecks("/health");
@@ -101,5 +88,14 @@ using (var scope = app.Services.CreateScope())
     // Run additional data management tasks
     await DataHelper.ManageDataAsync(scope.ServiceProvider);
 }
+
+// Endpoints
+app.MapCategoryEndpoints();
+app.MapConditionEndpoints();
+app.MapListingEndpoints();
+app.MapMessageEndpoints();
+app.MapPaymentTypeEndpoints();
+app.MapSavedListingEndpoints();
+app.MapUserEndpoints();
 
 app.Run();
