@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("https://techtraderclient-production.up.railway.app", "http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://techtraderclient-production.up.railway.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
@@ -59,11 +59,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
-// Use health checks
-app.UseHealthChecks("/health");
-
 // Use CORS
 app.UseCors();
+
+// Use health checks
+app.UseHealthChecks("/health");
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -90,7 +90,7 @@ if (app.Environment.IsDevelopment())
 //    await DataHelper.ManageDataAsync(scope.ServiceProvider);
 //}
 
-// Endpoints
+// Map endpoints
 app.MapCategoryEndpoints();
 app.MapConditionEndpoints();
 app.MapListingEndpoints();
