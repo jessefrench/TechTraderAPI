@@ -7,6 +7,7 @@
     <RootNamespace>TechTrader</RootNamespace>
     <UserSecretsId>4dc4e824-aa7d-4f59-849c-117482b6cd8d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <ItemGroup>

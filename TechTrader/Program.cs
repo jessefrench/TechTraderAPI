@@ -4,6 +4,8 @@ using TechTrader.Endpoints;
 using TechTrader.Interfaces;
 using TechTrader.Services;
 using TechTrader.Repositories;
+using TechTrader.Utility;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +24,8 @@ builder.Services.AddHealthChecks();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Retrieve the connection string
-var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-var connectionString = builder.Configuration["TechTraderDbConnectionString"];
+var connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
+builder.Services.AddDbContext<TechTraderDbContext>(options => options.UseNpgsql(connectionString));
 
 // Allows API endpoints to access the database through Entity Framework Core
 builder.Services.AddNpgsql<TechTraderDbContext>(connectionString);
@@ -64,6 +66,15 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 
+// Endpoints
+app.MapCategoryEndpoints();
+app.MapConditionEndpoints();
+app.MapListingEndpoints();
+app.MapMessageEndpoints();
+app.MapPaymentTypeEndpoints();
+app.MapSavedListingEndpoints();
+app.MapUserEndpoints();
+
 // Use health checks
 app.UseHealthChecks("/health");
 
@@ -79,13 +90,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Endpoints
-app.MapCategoryEndpoints();
-app.MapConditionEndpoints();
-app.MapListingEndpoints();
-app.MapMessageEndpoints();
-app.MapPaymentTypeEndpoints();
-app.MapSavedListingEndpoints();
-app.MapUserEndpoints();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<TechTraderDbContext>();
+
+    // Apply any pending migrations to the database
+    await context.Database.MigrateAsync();
+
+    // Run additional data management tasks
+    await DataHelper.ManageDataAsync(scope.ServiceProvider);
+}
 
 app.Run();
