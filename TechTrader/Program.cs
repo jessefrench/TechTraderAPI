@@ -8,7 +8,6 @@ using TechTrader.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,8 +21,12 @@ builder.Services.AddHealthChecks();
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+// Retrieve the connection string
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+var connectionString = builder.Configuration["TechTraderDbConnectionString"];
+
 // Allows API endpoints to access the database through Entity Framework Core
-builder.Services.AddNpgsql<TechTraderDbContext>(builder.Configuration["TechTraderDbConnectionString"]);
+builder.Services.AddNpgsql<TechTraderDbContext>(connectionString);
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>

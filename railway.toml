@@ -6,3 +6,6 @@ dockerfilePath = "./TechTrader/Dockerfile"
 startCommand = "dotnet TechTrader.dll"
 restartPolicyType = "always"
 healthcheckPath = "/health"
+
+[env]
+DATABASE_URL = "{{DATABASE_URL}}"
