@@ -78,17 +78,17 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<TechTraderDbContext>();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var context = services.GetRequiredService<TechTraderDbContext>();
 
-    // Apply any pending migrations to the database
-    await context.Database.MigrateAsync();
+//    // Apply any pending migrations to the database
+//    await context.Database.MigrateAsync();
 
-    // Run additional data management tasks
-    await DataHelper.ManageDataAsync(scope.ServiceProvider);
-}
+//    // Run additional data management tasks
+//    await DataHelper.ManageDataAsync(scope.ServiceProvider);
+//}
 
 // Endpoints
 app.MapCategoryEndpoints();
