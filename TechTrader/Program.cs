@@ -12,6 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Specify port
+var port = Environment.GetEnvironmentVariable("PORT") ?? "7103";
+builder.WebHost.UseUrls($"https://*:{port}");
+
+// Allow health checks
+builder.Services.AddHealthChecks();
+
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -53,6 +60,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
+
+// Use health checks
+app.UseHealthChecks("/health");
 
 // Use CORS
 app.UseCors();
