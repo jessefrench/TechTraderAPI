@@ -4,8 +4,6 @@ using TechTrader.Endpoints;
 using TechTrader.Interfaces;
 using TechTrader.Services;
 using TechTrader.Repositories;
-using TechTrader.Utility;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,9 +32,10 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:3000", "https://techtraderclient-production.up.railway.app")
         .AllowAnyMethod()
-        .AllowAnyHeader();
+        .AllowAnyHeader()
+        .AllowCredentials();
     });
 });
 
@@ -76,18 +75,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
-
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<TechTraderDbContext>();
-
-//    // Apply any pending migrations to the database
-//    await context.Database.MigrateAsync();
-
-//    // Run additional data management tasks
-//    await DataHelper.ManageDataAsync(scope.ServiceProvider);
-//}
 
 // Map endpoints
 app.MapCategoryEndpoints();
