@@ -20,7 +20,8 @@ builder.Services.AddHealthChecks();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Allows API endpoints to access the database through Entity Framework Core
-builder.Services.AddNpgsql<TechTraderDbContext>(builder.Configuration["TechTraderDbConnectionString"]);
+var connectionString = builder.Configuration["TechTraderDbConnectionString"];
+builder.Services.AddNpgsql<TechTraderDbContext>(connectionString);
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>
