@@ -3,6 +3,6 @@ builder = "dockerfile"
 dockerfilePath = "./TechTrader/Dockerfile"
 
 [deploy]
-startCommand = "dotnet", "TechTrader.dll"
+startCommand = "./TechTrader"
 restartPolicyType = "always"
 healthcheckPath = "/health"
