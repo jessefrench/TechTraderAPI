@@ -13,10 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Specify port
-var port = Environment.GetEnvironmentVariable("PORT") ?? "7103";
-builder.WebHost.UseUrls($"https://*:{port}");
-
 // Allow health checks
 builder.Services.AddHealthChecks();
 
@@ -88,7 +84,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 using (var scope = app.Services.CreateScope())
 {
