@@ -28,7 +28,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    // Fetch from environment variable
+    // Fetch from Railway environment variable
     connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 }
 
