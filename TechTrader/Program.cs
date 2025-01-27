@@ -19,9 +19,22 @@ builder.Services.AddHealthChecks();
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Set db connection string
-var connectionstring = ConnectionHelper.GetConnectionString(builder.Configuration);
-builder.Services.AddDbContext<TechTraderDbContext>(options => options.UseNpgsql(connectionstring));
+// Determine environment-specific connection string
+string connectionString;
+if (builder.Environment.IsDevelopment())
+{
+    // Use local database in development
+    connectionString = builder.Configuration["TechTraderDbConnectionString"];
+}
+else
+{
+    // Fetch from environment variable
+    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+}
+
+// Set the database context
+builder.Services.AddDbContext<TechTraderDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>
