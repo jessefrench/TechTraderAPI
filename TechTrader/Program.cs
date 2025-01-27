@@ -4,6 +4,8 @@ using TechTrader.Endpoints;
 using TechTrader.Interfaces;
 using TechTrader.Services;
 using TechTrader.Repositories;
+using Microsoft.EntityFrameworkCore;
+using TechTrader.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +19,9 @@ builder.Services.AddHealthChecks();
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Allows API endpoints to access the database through Entity Framework Core
-var connectionString = builder.Configuration["TechTraderDbConnectionString"];
-builder.Services.AddNpgsql<TechTraderDbContext>(connectionString);
+// Set db connection string
+var connectionstring = ConnectionHelper.GetConnectionString(builder.Configuration);
+builder.Services.AddDbContext<TechTraderDbContext>(options => options.UseNpgsql(connectionstring));
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>
@@ -74,6 +76,18 @@ if (app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<TechTraderDbContext>();
+
+    // Apply any pending migrations to the database
+    await context.Database.MigrateAsync();
+
+    // Run additional data management tasks
+    await DataHelper.ManageDataAsync(scope.ServiceProvider);
 }
 
 // Map endpoints
