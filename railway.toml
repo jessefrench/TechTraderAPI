@@ -1,0 +1,11 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./TechTrader/Dockerfile"
+
+[deploy]
+startCommand = "dotnet TechTrader.dll"
+restartPolicyType = "always"
+healthcheckPath = "/health"
+
+[env]
+DATABASE_URL = "{{DATABASE_URL}}"

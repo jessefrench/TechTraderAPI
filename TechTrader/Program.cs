@@ -4,19 +4,37 @@ using TechTrader.Endpoints;
 using TechTrader.Interfaces;
 using TechTrader.Services;
 using TechTrader.Repositories;
+using Microsoft.EntityFrameworkCore;
+using TechTrader.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Allow health checks
+builder.Services.AddHealthChecks();
 
 // Allows passing datetimes without time zone data 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Allows API endpoints to access the database through Entity Framework Core
-builder.Services.AddNpgsql<TechTraderDbContext>(builder.Configuration["TechTraderDbConnectionString"]);
+// Determine environment-specific connection string
+string connectionString;
+if (builder.Environment.IsDevelopment())
+{
+    // Use local database in development
+    connectionString = builder.Configuration["TechTraderDbConnectionString"];
+}
+else
+{
+    // Fetch from Railway environment variable
+    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+}
+
+// Set the database context
+builder.Services.AddDbContext<TechTraderDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>
@@ -29,7 +47,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://techtraderclient-production.up.railway.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
@@ -57,6 +75,9 @@ var app = builder.Build();
 // Use CORS
 app.UseCors();
 
+// Use health checks
+app.UseHealthChecks("/health");
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -64,9 +85,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
-// Endpoints
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<TechTraderDbContext>();
+
+    // Apply any pending migrations to the database
+    await context.Database.MigrateAsync();
+
+    // Run additional data management tasks
+    await DataHelper.ManageDataAsync(scope.ServiceProvider);
+}
+
+// Map endpoints
 app.MapCategoryEndpoints();
 app.MapConditionEndpoints();
 app.MapListingEndpoints();
