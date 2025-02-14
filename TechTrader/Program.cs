@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using TechTrader.Endpoints;
@@ -7,6 +8,7 @@ using TechTrader.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TechTrader.Utility;
 
+// Initialize web application builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
@@ -16,10 +18,7 @@ builder.Services.AddSwaggerGen();
 // Allow health checks
 builder.Services.AddHealthChecks();
 
-// Allows passing datetimes without time zone data 
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-// Determine environment-specific connection string
+// Determine environment specific connection string
 string connectionString;
 if (builder.Environment.IsDevelopment())
 {
@@ -40,6 +39,10 @@ builder.Services.AddDbContext<TechTraderDbContext>(options =>
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.WriteIndented = true;
+    options.SerializerOptions.Converters.Add(new DateTimeHelper());
 });
 
 // Add CORS
@@ -70,6 +73,7 @@ builder.Services.AddScoped<ISavedListingRepository, SavedListingRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+// Create web application from builder services
 var app = builder.Build();
 
 // Use CORS
@@ -91,6 +95,7 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+// Create new scope for resolving scoped services
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -112,4 +117,5 @@ app.MapPaymentTypeEndpoints();
 app.MapSavedListingEndpoints();
 app.MapUserEndpoints();
 
+// Run application
 app.Run();
