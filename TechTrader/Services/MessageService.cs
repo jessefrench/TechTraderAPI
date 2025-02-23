@@ -1,5 +1,7 @@
-﻿using TechTrader.Models;
+﻿using Microsoft.AspNetCore.SignalR;
+using TechTrader.Models;
 using TechTrader.Interfaces;
+using TechTrader.Utility;
 
 namespace TechTrader.Services
 {
@@ -32,9 +34,9 @@ namespace TechTrader.Services
             return await _messageRepository.GetLatestMessagesAsync(userId);
         }
 
-        public async Task<Message> CreateNewConversationAsync(Message message)
+        public async Task<Message> CreateNewConversationAsync(Message message, IHubContext<MessageHub> hubContext)
         {
-            return await _messageRepository.CreateNewConversationAsync(message);
+            return await _messageRepository.CreateNewConversationAsync(message, hubContext);
         }
 
         public async Task<Message> UpdateMessageAsync(int messageId, Message updatedMessage)

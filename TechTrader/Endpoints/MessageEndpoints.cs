@@ -1,5 +1,7 @@
-﻿using TechTrader.Models;
+﻿using Microsoft.AspNetCore.SignalR;
+using TechTrader.Models;
 using TechTrader.Interfaces;
+using TechTrader.Utility;
 
 namespace TechTrader.Endpoints
 {
@@ -46,10 +48,10 @@ namespace TechTrader.Endpoints
             .Produces<List<Message>>(StatusCodes.Status200OK);
 
             // create a new conversation
-            group.MapPost("/", async (IMessageService messageService, Message message) =>
+            group.MapPost("/", async (IMessageService messageService, IHubContext<MessageHub> hubContext, Message message) =>
             {
-                var newMessage = await messageService.CreateNewConversationAsync(message);
-                return Results.Created($"/messages/{message.Id}", message);
+                var newMessage = await messageService.CreateNewConversationAsync(message, hubContext);
+                return Results.Created($"/messages/{newMessage.Id}", newMessage);
             })
             .WithName("CreateNewConversation")
             .WithOpenApi()

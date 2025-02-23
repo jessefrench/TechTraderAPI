@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using TechTrader.Models;
 using TechTrader.Interfaces;
+using TechTrader.Utility;
 
 namespace TechTrader.Repositories
 {
@@ -68,7 +70,7 @@ namespace TechTrader.Repositories
         }
 
         // create a new conversation
-        public async Task<Message> CreateNewConversationAsync(Message message)
+        public async Task<Message> CreateNewConversationAsync(Message message, IHubContext<MessageHub> hubContext)
         {
             if (string.IsNullOrWhiteSpace(message.Content))
                 throw new ArgumentException("Message content cannot be empty.", nameof(message.Content));
@@ -79,6 +81,18 @@ namespace TechTrader.Repositories
             message.SentAt = DateTime.UtcNow;
             dbContext.Messages.Add(message);
             await dbContext.SaveChangesAsync();
+
+            // Get receiver's connection ID
+            var connectionId = MessageHub.GetConnectionId(message.ReceiverId);
+            if (connectionId != null)
+            {
+                await hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
+                Console.WriteLine($"Sent message to {message.ReceiverId} at Connection ID: {connectionId}");
+            }
+            else
+            {
+                Console.WriteLine($"Receiver {message.ReceiverId} is not connected.");
+            }
 
             return message;
         }

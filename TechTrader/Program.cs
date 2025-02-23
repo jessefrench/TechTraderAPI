@@ -50,12 +50,15 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://techtrader.up.railway.app")
+        policy.WithOrigins("http://localhost:3000", "https://localhost:3000", "https://techtrader.up.railway.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
     });
 });
+
+// Add SignalR for real time messages
+builder.Services.AddSignalR();
 
 // Add scoped services
 builder.Services.AddScoped<IListingService, ListingService>();
@@ -78,6 +81,9 @@ var app = builder.Build();
 
 // Use CORS
 app.UseCors();
+
+// Use SignalR
+app.MapHub<MessageHub>("/messageHub");
 
 // Use health checks
 app.UseHealthChecks("/health");
