@@ -50,6 +50,7 @@ namespace TechTrader.Repositories
         // create a listing
         public async Task<Listing> CreateListingAsync(Listing listing)
         {
+            listing.CreatedOn = DateTime.UtcNow;
             await dbContext.Listings.AddAsync(listing);
             await dbContext.SaveChangesAsync();
             return listing;
