@@ -10,7 +10,7 @@
         public string Description { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public bool Sold { get; set; }
         public User Seller { get; set; }
         public Category Category { get; set; }
